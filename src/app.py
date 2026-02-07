@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import pandas as pd
 
 
@@ -34,13 +34,21 @@ def run_queries_from_file(engine, filepath):
                 continue
             try:
                 print(f"\n🔎 Query {i}:\n{query}")
-                df = pd.read_sql(query, con=engine)
-                print(df)
+                  # Check if it's a SELECT query
+                if query.strip().upper().startswith('SELECT'):
+                    df = pd.read_sql(query, con=engine)
+                    print(df)                           
+                else:
+                    # For INSERT, UPDATE, DELETE - execute without reading
+                    with engine.connect() as conn:
+                        result = conn.execute(text(query))
+                        conn.commit()
+                        print(f"✅ Query executed successfully. Rows affected: {result.rowcount}")
+
             except Exception as e:
                 print(f"❌ Error in Query {i}: {e}")
     except Exception as e:
         print(f"❌ Error processing queries from {filepath}: {e}")
-
 
 # Entry point
 if __name__ == "__main__":
