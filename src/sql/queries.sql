@@ -53,7 +53,7 @@ where observation_date='1998-08-08';
 -- Your query here;
 select  region_id,count(*) as observation_count 
 from observations
-group by region_id;
+group by region_id
 order by observation_count DESC
 LIMIT 1;
 
@@ -121,7 +121,7 @@ order by region, total_observed,region DESC;
 INSERT INTO observations
 (species_id, region_id, observer, observation_date, "count")
    VALUES (1, 3, 'TestOb', '1994-11-01', 0);
-COMMIT;
+
 
 select * from observations order by id desc limit 10;
 
@@ -131,7 +131,7 @@ select * from observations order by id desc limit 10;
 UPDATE species
 set scientific_name = 'parakeet para'
 where scientific_name = 'Lalage tricolor'--id = 3;
-commit;
+
 select * from species where scientific_name = 'parakeet para';
 
 
@@ -140,6 +140,5 @@ select * from species where scientific_name = 'parakeet para';
 DELETE FROM observations
 WHERE id = 1;
 
-commit;
 
 select * from observations where id = 1;
